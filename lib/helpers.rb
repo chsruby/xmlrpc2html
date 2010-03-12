@@ -1,15 +1,17 @@
 helpers do
   def navbar(app)
     navbar = ''
-    app.targets.sort_by {|t| t.display }.each_with_index do |target, target_i|
-      navbar << '<h3>%s</h3>' % target.display
+    app.targets.sort_by {|t| t.display_as }.each_with_index do |target, target_i|
+      navbar << '<h3>%s</h3>' % target.display_as
       navbar << '<ul>'
-      target.xmlrpc_methods.sort_by {|m| m.display}.each_with_index do |method, method_i|
-        href = "target#{target_i}/method#{methodi}"
-        navbar << '<li><a href="%s">%s</a></li>' % [href, method.display]
+      target.xmlrpc_methods.sort_by {|m| m.display_as }.each_with_index do |method, method_i|
+        puts method.inspect
+        href = "target#{target_i}/method#{method_i}"
+        navbar << '<li><a href="%s">%s</a></li>' % [href, method.display_as]
       end
       navbar << '</ul>'
     end
+    navbar
   end
 
   def layout(app, body)
