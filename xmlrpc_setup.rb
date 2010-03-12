@@ -1,39 +1,68 @@
-class XmlrpcSetup
-  def XmlrpcSetup.setup(display = '', &block)
-    setup = self.new
-    setup.display = display
-    puts setup.display
-    setup.instance_eval(&block)
-    return setup
-  end
-  
-  attr_accessor :display
+require 'ostruct'
+module Xmlrpc2Html
+  class Setup < OpenStruct
+    def self.setup(&block)
+      app = self.new :display_as => ''
+      app.instance_eval(&block)
+      return Xmlrpc2Html::Generate.new(app)
+    end
     
-  def target url, options, &block
-    puts url
-    puts options[:display]
-    block.call
-  end
+    def display display
+      self.display_as = display
+    end
+    
+    def target url, options = {}, &block
+      new_target = Target.new :xmlrpc_methods => [],
+                              :url => url,
+                              :options => options,
+                              :display_as => nil
+      new_target.instance_eval(&block)
+      self.targets << new_target
+    end
   
-  def method method_name, options, &block
-    puts method_name
-    puts options[:display]
-    block.call
-  end
+    class Target < OpenStruct
+      def display display
+        self.display_as = display
+      end
+        
+      def method method_name, options = {}, &block
+        new_method = XmlrpcMethod.new :tests => [],
+                                :method_name => method_name,
+                                :options => options,
+                                :display_as => nil
+        new_method.instance_eval(&block)
+        self.xmlrpc_methods << new_method
+      end
+    
+      class XmlrpcMethod < OpenStruct
+        def display display_name
+          self.display = display_name
+        end
+        
+        def input_template template
+          self.input_template = template
+        end
   
-  def input_template template
-    puts template.inspect
-  end
+        def test test_name, &block
+          new_test = Test.new :display_as => nil
+          new_test.instance_eval(&block)
+          self.tests << new_test
+        end
+    
+        class Test < OpenStruct
+          def display display_as
+            self.display_as = display_as
+          end
+          
+          def input input
+            self.input = input
+          end
   
-  def test test_name, &block
-    block.call
-  end
-  
-  def input input_data
-    puts input_data.inspect
-  end
-  
-  def expect expect_data
-    puts expect_data.inspect
+          def expect expect
+            self.expect = expect
+          end
+        end
+      end
+    end
   end
 end

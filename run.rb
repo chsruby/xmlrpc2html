@@ -1,0 +1,6 @@
+require 'rubygems'
+require 'sinatra'
+require File.dirname(__FILE__) + '/helpers.rb'
+require File.dirname(__FILE__) + '/generate.rb'
+require File.dirname(__FILE__) + '/xmlrpc_setup.rb'
+require File.dirname(__FILE__) + '/xmlrpc_config.rb'
