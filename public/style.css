@@ -1,0 +1,14 @@
+body {
+	font-family: Georgia, Times New Roman, Serif;
+}
+
+#navbar {
+	float: left;
+	border-right: 2px solid navy;
+	padding-right: 1em;
+	margin-right: 1em;
+}
+
+#content {
+	
+}
